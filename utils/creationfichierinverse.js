@@ -18,6 +18,7 @@ async function buildInvertedIndexWithTFIDF() {
         for (const doc of documents) {
             const { fileName, indexdoc } = doc;
             const { index, frequency } = indexdoc;
+            console.log(indexdoc.index)
 
             // Iterate over each term in the document
             for (const term of index) {
@@ -28,7 +29,7 @@ async function buildInvertedIndexWithTFIDF() {
 
           
                 const tf = frequency.get(term); // Frequency of the term in the document
-
+                
                 // Initialize the term in the inverted index if not already present
                 if (!invertedIndex[term]) {
                     invertedIndex[term] = {
@@ -53,7 +54,7 @@ async function buildInvertedIndexWithTFIDF() {
             const { nb_doc, posting } = termData;
 
             // Calculate IDF for the term
-            const idf = Math.log(totalDocs / nb_doc);
+            const idf = Math.log10(totalDocs/nb_doc);
 
             // Sort the posting list alphabetically by fileName
             posting.sort((a, b) => a.fileName.localeCompare(b.fileName));
@@ -75,15 +76,15 @@ async function buildInvertedIndexWithTFIDF() {
             }).filter(post => post !== null); // Filter out any null entries
 
             // Create or update the term in the FichierInverse collection
-            await FichierInverse.updateOne(
-                { terme: term }, // Find the document by term
-                {
-                    terme: term,
-                    nb_doc: nb_doc,
-                    posting: updatedPosting
-                },
-                { upsert: true } // Create a new document if it doesn't exist
-            );
+            // await FichierInverse.updateOne(
+            //     { terme: term }, // Find the document by term
+            //     {
+            //         terme: term,
+            //         nb_doc: nb_doc,
+            //         posting: updatedPosting
+            //     },
+            //     { upsert: true } // Create a new document if it doesn't exist
+            // );
         }
 
         console.log("Inverted index with tf*idf has been built and saved successfully!");

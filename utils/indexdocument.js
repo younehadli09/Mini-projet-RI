@@ -94,6 +94,7 @@ function processDocument(content) {
   for (const token of tokens) {
     const lowerToken = token.toLowerCase();
     if (!stoplist.includes(lowerToken)) {
+      
       const processedWord = processWord(lowerToken);
       if (processedWord in index) {
         frequency[processedWord]++;

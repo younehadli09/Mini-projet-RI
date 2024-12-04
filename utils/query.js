@@ -9,7 +9,11 @@ const stoplistPath = "/home/matiic/Desktop/Projet RI/stoplist.txt";
 
 
 
-const stoplist = fs.readFileSync(stoplistPath, 'utf-8').split(/\r?\n/);
+const stoplist = fs
+    .readFileSync(stoplistPath, 'utf-8')
+    .split(/\r?\n/) // Split into lines
+    .map(word => word.trim().toLowerCase()); // Trim and normalize to lowercase
+
 
 
 function indexQuery(query) {
@@ -18,8 +22,13 @@ function indexQuery(query) {
     const frequencies = {};
 
     for (let token of tokens) {
-        token = token.toLowerCase(); // Normalisation en minuscules
-        if (stoplist.includes(token)) continue;
+        token = token.toLowerCase().trim(); // Normalisation en minuscules
+        if (stoplist.includes(token)) {
+            console.log(`Skipping stop word: ${token}`);
+            continue;}
+            console.log("Token:", token);
+console.log("Stoplist match:", stoplist.includes(token));
+
 
         // Étape de traitement linguistique
         let word = token;
@@ -46,13 +55,14 @@ function indexQuery(query) {
             frequencies[word]++;
         }
     }
-
+   
     return { indexedTerms: Object.keys(indexedTerms), frequencies };
 }
 
 
 async function searchQuery(query) {
     const { indexedTerms, frequencies } = indexQuery(query);
+    console.log(indexedTerms);
 
     const results = {}; // Contiendra le RSV pour chaque document
     const allTermsData = await FichierInverse.find({
@@ -76,7 +86,7 @@ async function searchQuery(query) {
     const sortedResults = Object.entries(results)
         .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
         .map(([fileName, score]) => ({ fileName, score }));
-
+        console.log(indexedTerms);
     return sortedResults;
 }
 

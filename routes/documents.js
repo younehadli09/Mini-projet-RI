@@ -3,6 +3,8 @@ const router = express.Router();
 const fs = require("fs");
 const path = require('path');
 const searchQuery = require('../utils/query')
+const Document = require('../models/Document');
+
 
 
 const {saveDocumentsFromFolder,saveProcessedDocument} = require('../utils/saveDocumentsFromFolder'); 
@@ -50,16 +52,36 @@ router.post('/build-inverted-index', async (req, res) => {
 
 router.post('/search', async (req, res) => {
     try {
-        const {request} =  req.body;
-        const query = request
-        if (!query) {
+        const { request } = req.body;
+
+        if (!request) {
             return res.status(400).json({ message: 'Query cannot be empty' });
         }
-        const results = await searchQuery(query);
-        res.status(200).json({ results });
+
+        // Perform the query logic (assuming `searchQuery` returns an array of file names and scores)
+        const results = await searchQuery(request);
+
+        // Fetch matching documents from the database
+        const fileNames = results.map(r => r.fileName);
+        const documents = await Document.find({ fileName: { $in: fileNames } });
+        // Map scores to the corresponding documents
+        const documentContents = documents.map(doc => {
+            const matchingResult = results.find(r => r.fileName === doc.fileName);
+            return {
+                fileName: doc.fileName,
+                content: doc.content,
+                score: matchingResult ? matchingResult.score : 0
+            };
+        });
+        
+
+        res.status(200).json({ results: documentContents });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Error searching', error: error.message });
     }
 });
+
+
 
 module.exports = router;

@@ -1,13 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
+
+
+
 const documentsRoutes = require('./routes/documents');
 
 dotenv.config();
 
 const app = express();
-
-// Middleware pour parser les JSON
+app.use(cors({ origin: 'http://localhost:3000' }))// Middleware pour parser les JSON
 app.use(express.json());
 
 // Connexion à MongoDB
@@ -27,7 +30,7 @@ const API = process.env.API_URL || '/api';
 app.use(`${API}/documents`, documentsRoutes);
 
 // Démarrer le serveur
-const PORT =  3000;
+const PORT =  3001;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
