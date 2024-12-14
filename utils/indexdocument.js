@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 
-const stoplistPath = "/home/matiic/Desktop/Projet RI/stoplist.txt";
+const stoplistPath = path.join(__dirname, '../stoplist.txt'); 
 
 let stoplist;
 try {
