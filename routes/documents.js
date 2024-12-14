@@ -10,7 +10,7 @@ const Document = require('../models/Document');
 const {saveDocumentsFromFolder,saveProcessedDocument} = require('../utils/saveDocumentsFromFolder'); 
 
 router.post('/save', async (req, res) => {
-    const folderPath = "/home/matiic/Desktop/Projet RI/Collection_TIME";
+    const folderPath = path.join(__dirname, '../Collection_TIME'); 
 
     if (!folderPath) {
         return res.status(400).json({ message: 'Folder path is required' });
