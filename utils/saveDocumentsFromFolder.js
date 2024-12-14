@@ -5,36 +5,38 @@ const processDocument = require('../utils/indexdocument');
 
 async function saveDocumentsFromFolder(filePath, content) {
     try {
-        const document = new Document({
-            fileName: filePath,
-            content: content,
-        });
+        const existingDocument = await Document.findOne({ fileName: filePath });
+        if (existingDocument) {
+            console.log(`Document already exists: ${filePath}`);
+            return;
+        }
 
+        const document = new Document({ fileName: filePath, content });
         await document.save();
-        console.log("Fichier enregistré:", filePath);
+        console.log("Document saved:", filePath);
     } catch (error) {
         console.error('Error saving document:', error.message);
     }
 }
 
 async function saveProcessedDocument(fileName, content) {
-    const { index, frequency } = processDocument(content);
-
-    const document = new Document({
-        fileName,
-        content,
-        indexdoc: {
-            index,    // Array of unique words
-            frequency // Object with word frequencies
-        }
-    });
-
     try {
+        const existingDocument = await Document.findOne({ fileName });
+        if (existingDocument) {
+            console.log(`Processed document already exists: ${fileName}`);
+            return;
+        }
+
+        const { index, frequency } = processDocument(content);
+        const document = new Document({
+            fileName,
+            content,
+            indexdoc: { index, frequency }
+        });
         await document.save();
         console.log("Processed document saved successfully!");
     } catch (error) {
         console.error("Error saving processed document:", error.message);
-        throw error;
     }
 }
 

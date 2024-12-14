@@ -44,10 +44,6 @@ function processWord(word) {
       word = extract(word, L - 1);
       L -= 1;
     }
-    if (word.endsWith("ed") && hasVowel(extract(word, L - 2))) {
-      word = extract(word, L - 1);
-      L -= 1;
-    }
     if (word.endsWith("y")) {
       word = extract(word, L - 1) + "i";
       L -= 1;
@@ -77,6 +73,14 @@ function processWord(word) {
       L -= 1;
     }
     if (word.endsWith("t") && measure(extract(word, L - 1)) > 1) {
+      word = extract(word, L - 1);
+      L -= 1;
+    }if ( word.endsWith("eed") && measure(extract(word, L - 3)) > 1 && measure(word) > 0){
+      word = extract(word, L - 1);
+      L -= 1;
+      
+    }
+    if (word.endsWith("ed") && hasVowel(extract(word, L - 2))) {
       word = extract(word, L - 1);
       L -= 1;
     }

@@ -25,7 +25,8 @@ function indexQuery(query) {
         token = token.toLowerCase().trim(); // Normalisation en minuscules
         if (stoplist.includes(token)) {
             console.log(`Skipping stop word: ${token}`);
-            continue;}
+            continue;
+        }
             console.log("Token:", token);
 console.log("Stoplist match:", stoplist.includes(token));
 
@@ -37,14 +38,20 @@ console.log("Stoplist match:", stoplist.includes(token));
         if (length > 3) {
             if (word.endsWith('ies')) word = word.slice(0, -2);
             else if (word.endsWith('s')) word = word.slice(0, -1);
-            else if (word.endsWith('ed') && /[aeiou]/.test(word.slice(0, -2))) word = word.slice(0, -1);
             else if (word.endsWith('y')) word = word.slice(0, -1) + 'i';
             if (word.length > 6 && word.endsWith('ation')) word = word.slice(0, -5) + 'ate';
             else if (word.endsWith('ant')) word = word.slice(0, -3);
             else if (word.endsWith('ate')) word = word.slice(0, -3);
             else if (word.endsWith('ss')) word = word.slice(0, -1);
             else if (word.endsWith('al')) word = word.slice(0, -2);
-            else if (word.endsWith('e')) word = word.slice(0, -1);
+            else if (word.length > 3 && word.endsWith('e')) word = word.slice(0, -1);
+            if (word.endsWith('eed') ) word = word.slice(0,-1);
+            else if (word.endsWith('ed') && /[aeiou]/.test(word.slice(0, -2))) word = word.slice(0, -1);
+
+
+
+           
+    
         }
 
         // Ajouter le mot à l'index

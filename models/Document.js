@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const DocumentSchema = new mongoose.Schema({
-    fileName: { type: String },
-    content: { type: String},  
+    fileName: { type: String, unique: true, required: true },
+    content: { type: String, required: true },
     indexdoc: {
-        index: [String], 
-        frequency: { type: Map, of: Number } 
+        index: [String],
+        frequency: mongoose.Schema.Types.Mixed
     }
 });
 

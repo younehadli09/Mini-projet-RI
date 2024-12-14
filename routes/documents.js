@@ -10,14 +10,13 @@ const Document = require('../models/Document');
 const {saveDocumentsFromFolder,saveProcessedDocument} = require('../utils/saveDocumentsFromFolder'); 
 
 router.post('/save', async (req, res) => {
-    const folderPath = "/home/matiic/Desktop/Projet RI/Collection_TIME"; 
+    const folderPath = "/home/matiic/Desktop/Projet RI/Collection_TIME";
 
     if (!folderPath) {
         return res.status(400).json({ message: 'Folder path is required' });
     }
 
     try {
-        // Save documents from the folder first
         const files = fs.readdirSync(folderPath);
 
         for (const file of files) {
@@ -25,10 +24,7 @@ router.post('/save', async (req, res) => {
             if (fs.statSync(filePath).isFile()) {
                 const content = fs.readFileSync(filePath, 'utf8');
 
-                // First save the document in its original form
-                await saveDocumentsFromFolder(filePath, content);
-                
-                // Then process and save the processed document
+                // Process and save the processed document (removing double logic)
                 await saveProcessedDocument(file, content);
             }
         }
