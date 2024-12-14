@@ -4,7 +4,9 @@ const router = express.Router();
 const Document = require('../models/Document'); 
 const FichierInverse = require('../models/Fichierinverse');
 const mongoose = require('mongoose');
-const stoplistPath = "/home/matiic/Desktop/Projet RI/stoplist.txt";
+const path = require("path");
+const stoplistPath = path.join(__dirname, '../stoplist.txt'); 
+
 
 
 
