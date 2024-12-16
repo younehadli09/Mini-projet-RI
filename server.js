@@ -10,7 +10,7 @@ const documentsRoutes = require('./routes/documents');
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:3000' }))// Middleware pour parser les JSON
+app.use(cors())// Middleware pour parser les JSON
 app.use(express.json());
 
 // Connexion à MongoDB
